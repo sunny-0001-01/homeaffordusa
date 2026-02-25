@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Can I Afford This House? | HomeAffordUSA</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<style>
+body{
+margin:0;
+font-family:system-ui;
+background:linear-gradient(180deg,#f3f7ff,#ecfdf5);
+color:#0f172a;
+}
+
+header{
+text-align:center;
+padding:60px 20px;
+}
+
+header h1{
+font-size:32px;
+margin:0;
+}
+
+header p{
+color:#475569;
+}
+
+.container{
+max-width:980px;
+margin:auto;
+padding:0 16px;
+}
+
+.hero{
+background:linear-gradient(135deg,#ffffff,#f0fdfa);
+border-radius:28px;
+padding:28px;
+box-shadow:0 30px 60px rgba(0,0,0,.08);
+display:flex;
+flex-wrap:wrap;
+gap:20px;
+align-items:center;
+}
+
+.cta{
+background:linear-gradient(90deg,#2563eb,#06b6d4);
+color:white;
+padding:14px 20px;
+border-radius:14px;
+font-weight:600;
+cursor:pointer;
+}
+
+.card{
+background:white;
+border-radius:24px;
+padding:22px;
+box-shadow:0 20px 40px rgba(0,0,0,.08);
+margin-top:20px;
+}
+
+label{
+display:block;
+margin-top:14px;
+font-weight:600;
+color:#334155;
+}
+
+input,select{
+width:100%;
+padding:14px;
+margin-top:6px;
+border-radius:14px;
+border:1px solid #e5e7eb;
+font-size:16px;
+}
+
+button{
+width:100%;
+margin-top:20px;
+padding:16px;
+border:none;
+border-radius:16px;
+background:linear-gradient(90deg,#2563eb,#06b6d4);
+color:white;
+font-size:16px;
+font-weight:600;
+}
+
+.verdict{
+font-size:22px;
+font-weight:800;
+}
+
+.progresswrap{
+height:10px;
+background:#e5e7eb;
+border-radius:8px;
+overflow:hidden;
+}
+
+.progress{
+height:100%;
+background:linear-gradient(90deg,#22c55e,#14b8a6);
+}
+
+.kpi{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+gap:12px;
+}
+
+.kpi .box{
+background:#f8fafc;
+padding:12px;
+border-radius:14px;
+}
+
+.scenarios{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+gap:12px;
+}
+
+.scenario{
+background:#f8fafc;
+padding:12px;
+border-radius:14px;
+}
+
+small,.small{
+color:#64748b;
+}
+
+@media(max-width:640px){
+header h1{font-size:26px;}
+.hero{padding:20px;}
+.card{padding:18px;}
+}
+</style>
+</head>
+<body>
+  <header>
+    <h1>Can I Afford This House? | HomeAffordUSA</h1>
+    <p>Type a home price, your salary and select a state — property tax auto-fills. Detailed breakdown, scenarios and a recommended price based on lender rules.</p>
+  </header>
+
+  <div class="container">
+
+    <div class="hero">
+      <div class="hero-left">
+        <strong style="font-size:18px">Real decision engine.</strong>
+        <p class="small" style="margin-top:8px;color:var(--muted)">State-level property tax averages are preloaded (ATTOM/Bankrate). County taxes may differ — we show the effective state rate as the baseline. Sources: Bankrate (ATTOM Data Solutions), Tax Foundation.</p>
+      </div>
+      <div class="hero-right">
+        <div style="font-size:13px;color:var(--muted);margin-bottom:10px">Quick action</div>
+        <div class="cta" onclick="document.getElementById('calcForm').scrollIntoView({behavior:'smooth'})">Start calculation</div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- left: form -->
+      <div>
+        <div id="calcForm" class="card">
+          <label>Home Price ($)</label>
+          <input id="priceInput" type="number" placeholder="e.g. 500000" />
+
+          <label>Annual Salary ($)</label>
+          <input id="salaryInput" type="number" placeholder="e.g. 55000" />
+
+          <label>State</label>
+          <select id="stateSelect"></select>
+
+          <label>Property Tax % (auto-fill from state; editable)</label>
+          <input id="taxInput" type="number" step="0.01" placeholder="e.g. 1.2" />
+
+          <label>% Of Income You Can Save yearly</label>
+          <input id="saveInput" type="number" value="20" />
+          <label>Your Monthly Expenses ($)</label>
+          <input id="expenseInput" type="number" placeholder="e.g. 3000" />
+
+          <small class="small">
+          Optional: If filled, we calculate savings from real leftover money instead of %.
+          </small>
+
+
+          <button id="calcBtn">Calculate Timeline & Affordability</button>
+
+          <small class="note">Tip: you can edit Property Tax % if you know a local county value. These are state effective averages. See sources below.</small>
+        </div>
+
+        <div class="card" style="margin-top:14px">
+          <strong>Why we auto-fill state taxes</strong>
+          <p class="small" style="margin-top:8px">Effective property tax rates vary widely by state and county. We preload **state average effective rates** so users don’t have to guess — this gives a realistic baseline for monthly ownership cost. For county-level precision we can add a county lookup (next step).</p>
+        </div>
+      </div>
+
+      <!-- right: quick info -->
+      <div>
+        <div class="card">
+          <strong>Quick KPIs</strong>
+          <div class="kpi" style="margin-top:10px">
+            <div class="box"><div style="color:var(--muted);font-size:12px">Monthly Income</div><div id="k_monthly" style="font-weight:800">$0</div></div>
+            <div class="box"><div style="color:var(--muted);font-size:12px">Monthly Savings</div><div id="k_monthly_s" style="font-weight:800">$0</div></div>
+            <div class="box"><div style="color:var(--muted);font-size:12px">Est. Property Tax /mo</div><div id="k_tax_m" style="font-weight:800">$0</div></div>
+          </div>
+
+          <hr/>
+          <div style="font-size:13px;color:var(--muted)">Assumptions:</div>
+          <ul style="margin:8px 0 0 18px;color:var(--muted);font-size:13px">
+            <li>20% down default used for timeline (editable by changing job/savings)</li>
+            <li>Mortgage calc uses 30yr term at assumed interest <strong>6.5%</strong> (you can change later)</li>
+            <li>Insurance assumed $120/mo</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- results full width -->
+      <div class="full">
+        <div id="result" class="card">
+          <div style="color:var(--muted)">Results will appear here after calculation.</div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      State averages from ATTOM / Bankrate table (2024 dataset). These are effective state rates — county/municipal differences may be large; treat this as a starting baseline.
+    </footer>
+  </div>
+
+<script>
+/* ========== STATE → EFFECTIVE TAX RATE (ATTOM/Bankrate 2024 values) ========== */
+/* Source: Bankrate (table from ATTOM Data Solutions) — used as authoritative state effective rates. See page. :contentReference[oaicite:5]{index=5} */
+const STATE_TAX = {
+  "Alabama":0.41, "Alaska":0.94, "Arizona":0.41, "Arkansas":0.60, "California":0.69,
+  "Colorado":0.50, "Connecticut":1.41, "Delaware":0.40, "District of Columbia":0.71, "Florida":0.90,
+  "Georgia":0.82, "Hawaii":0.42, "Idaho":0.42, "Illinois":1.84, "Indiana":0.84,
+  "Iowa":1.27, "Kansas":1.26, "Kentucky":0.77, "Louisiana":0.77, "Maine":0.89,
+  "Maryland":0.85, "Massachusetts":0.96, "Michigan":1.08, "Minnesota":1.01, "Mississippi":0.64,
+  "Missouri":0.85, "Montana":0.67, "Nebraska":1.29, "Nevada":0.48, "New Hampshire":1.24,
+  "New Jersey":1.52, "New Mexico":0.64, "New York":0.82, "North Carolina":0.62, "North Dakota":0.96,
+  "Ohio":1.35, "Oklahoma":0.88, "Oregon":0.84, "Pennsylvania":1.26, "Rhode Island":0.94,
+  "South Carolina":0.55, "South Dakota":1.11, "Tennessee":0.46, "Texas":1.38, "Utah":0.46,
+  "Vermont":1.22, "Virginia":0.81, "Washington":0.78, "West Virginia":0.50, "Wisconsin":1.29,
+  "Wyoming":0.52
+};
+
+/* Populate state select */
+const stateSelect = document.getElementById('stateSelect');
+Object.keys(STATE_TAX).forEach(s=>{
+  const opt = document.createElement('option');
+  opt.value = s; opt.textContent = s;
+  stateSelect.appendChild(opt);
+});
+
+/* on state change autofill tax */
+stateSelect.addEventListener('change', ()=>{
+  const s = stateSelect.value;
+  const v = STATE_TAX[s];
+  if(typeof v === 'number') document.getElementById('taxInput').value = v.toFixed(2);
+});
+
+/* helper: mortgage loan from monthly PI payment (30yr) */
+function loanFromPayment(monthlyPI, annualRate=0.065, years=30){
+  const r = annualRate/12;
+  const n = years*12;
+  const factor = (Math.pow(1+r,n)-1)/(r*Math.pow(1+r,n));
+  return monthlyPI * factor;
+}
+
+/* main calculation */
+document.getElementById('calcBtn').addEventListener('click', function(){
+  const price = parseFloat(document.getElementById('priceInput').value);
+  const salary = parseFloat(document.getElementById('salaryInput').value);
+  let taxPct = parseFloat(document.getElementById('taxInput').value);
+  const savePct = parseFloat(document.getElementById('saveInput').value)/100;
+
+  if(!price || !salary || !taxPct){ alert('Fill Home Price, Salary and ensure Property Tax is populated.'); return; }
+  taxPct = taxPct/100;
+
+  // assumptions
+  const insuranceMonthly = 120;
+  const downPct = 0.20;
+  const annualRate = 0.065; // 6.5% assumed mortgage rate
+  const termYears = 30;
+
+  // basics
+  const monthlyIncome = salary/12;
+  const netMonthly = monthlyIncome * 0.78; // rough 22% tax withheld
+  let yearlySavings = salary * savePct;
+  const expenseVal = parseFloat(document.getElementById("expenseInput").value);
+
+  // If user entered expenses, override savings with real leftover money
+  if(expenseVal && expenseVal > 0){
+  const leftoverMonthly = (salary/12) - expenseVal;
+  if(leftoverMonthly > 0){
+  yearlySavings = leftoverMonthly * 12;
+  }
+  }
+  const monthlySavings = yearlySavings/12;
+
+  const downPayment = price * downPct;
+  const yearsToDown = Math.ceil(downPayment / yearlySavings);
+
+  const monthlyPropertyTax = (price * taxPct) / 12;
+
+  // lender budgets
+  const safeBudget = monthlyIncome * 0.28;
+  const stretchBudget = monthlyIncome * 0.36;
+
+  // recommended max principal & price based on safeBudget:
+  // max PITI allowed = safeBudget -> first remove tax+insurance -> PI allowed:
+  const maxPITI = safeBudget;
+  const maxPI = Math.max(0, maxPITI - monthlyPropertyTax - insuranceMonthly);
+  // get loan amount that produces maxPI monthly PI payment:
+  const loanAmount = loanFromPayment(maxPI, annualRate, termYears);
+  const recommendedMaxPrice = Math.round(loanAmount / (1 - downPct));
+
+  // readiness %
+  const readinessPct = Math.min((yearlySavings / downPayment) * 100, 100);
+
+  // scenarios
+  const incomeBoost = salary + 15000;
+  const yearsBoost = Math.ceil(downPayment / (incomeBoost * savePct));
+  const saveBoostPct = (savePct + 0.05);
+  const yearsSaveBoost = Math.ceil(downPayment / (salary * saveBoostPct));
+
+  // verdict
+  let verdict = '', cls='';
+  if(yearsToDown < 5) { verdict = 'Comfortable — realistic in short term'; cls='color:'+getComputedStyle(document.documentElement).getPropertyValue('--good'); }
+  else if(yearsToDown < 10) { verdict = 'Slow Grind — possible with discipline'; cls='color:'+getComputedStyle(document.documentElement).getPropertyValue('--warn'); }
+  else { verdict = 'Unrealistic — rethink price or income'; cls='color:'+getComputedStyle(document.documentElement).getPropertyValue('--bad'); }
+
+  // fill KPIs at top-right
+  document.getElementById('k_monthly').textContent = '$' + Math.round(monthlyIncome).toLocaleString();
+  document.getElementById('k_monthly_s').textContent = '$' + Math.round(monthlySavings).toLocaleString();
+  document.getElementById('k_tax_m').textContent = '$' + Math.round(monthlyPropertyTax).toLocaleString();
+
+  // build result HTML
+  const resultEl = document.getElementById('result');
+  resultEl.innerHTML = `
+    <div class="verdict">${verdict}</div>
+    ${expenseVal ? `
+    <div style="margin-top:8px;background:#f8fafc;padding:10px;border-radius:12px;font-size:14px">
+    You spend about <b>$${expenseVal.toLocaleString()}</b>/month — leaving roughly 
+    <b>$${Math.round(yearlySavings/12).toLocaleString()}</b> for home savings.
+    </div>
+    ` : ``}
+
+<div style="margin-top:10px;background:#f8fafc;padding:12px;border-radius:12px">
+  <strong>At this home price ($${price.toLocaleString()}), here’s what it realistically takes:</strong>
+  <ul style="margin:8px 0 0 18px;color:#475569;font-size:14px">
+    <li>Save at least <b>$${Math.round(downPayment/yearsToDown/12).toLocaleString()}</b> per month toward down payment.</li>
+    <li>Keep total housing under <b>$${Math.round(safeBudget).toLocaleString()}</b> / month (28% lender rule).</li>
+    <li>If timeline feels long, aim for income around <b>$${(salary+15000).toLocaleString()}</b> or reduce target price.</li>
+  </ul>
+</div>
+
+    <div style="font-size:13px;color:var(--muted)">Summary</div>
+    <div style="display:flex;gap:12px;margin-top:8px;flex-wrap:wrap">
+      <div style="min-width:220px"><strong>Down payment (20%):</strong><div>$${downPayment.toLocaleString()}</div></div>
+      <div style="min-width:220px"><strong>Years to 20% down (current savings):</strong><div>${yearsToDown} years</div></div>
+      <div style="min-width:220px"><strong>Monthly property tax estimate:</strong><div>$${Math.round(monthlyPropertyTax).toLocaleString()}</div></div>
+    </div>
+
+    <hr />
+
+    <h3>1) Income breakdown</h3>
+    <p>Gross monthly income: <strong>$${Math.round(monthlyIncome).toLocaleString()}</strong></p>
+    <p>Estimated take-home (approx 78%): <strong>$${Math.round(netMonthly).toLocaleString()}</strong></p>
+
+    <hr/>
+
+    <h3>2) Savings plan & progress</h3>
+    <p>Monthly savings at ${Math.round(savePct*100)}%: <strong>$${Math.round(monthlySavings).toLocaleString()}</strong></p>
+    <div class="progresswrap"><div class="progress" style="width:${readinessPct}%"></div></div>
+    <div style="font-size:13px;color:var(--muted)">${readinessPct.toFixed(1)}% of required down payment saved per year (baseline). At this rate, you'll hit 20% down in ${yearsToDown} years.</div>
+
+    <hr/>
+
+    <h3>3) Lender affordability (rules)</h3>
+    <p>Safe monthly housing budget (28% rule): <strong>$${Math.round(safeBudget).toLocaleString()}</strong></p>
+    <p>Stretch monthly limit (36% rule): <strong>$${Math.round(stretchBudget).toLocaleString()}</strong></p>
+
+    <p style="margin-top:8px">Based on the safe budget and current property tax, the <strong>maximum recommended home price</strong> you should target is: <strong>$${recommendedMaxPrice.toLocaleString()}</strong> (assumes 30-yr mortgage @ ${ (annualRate*100).toFixed(2) }% and $120/mo insurance).</p>
+
+    <hr/>
+
+    <h3>4) Ownership & hidden costs</h3>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <div class="kpi" style="gap:6px">
+        <div class="box"><div style="color:var(--muted);font-size:12px">Estimated monthly PI (principal+interest) if you buy ${price.toLocaleString()}</div><div id="estPI" style="font-weight:800">$0</div></div>
+        <div class="box"><div style="color:var(--muted);font-size:12px">PMI (if <20% down)</div><div id="estPMI" style="font-weight:800">$${ (downPct < 0.20 ? Math.round(((price*(1-downPct))*0.01)/12) : 0).toLocaleString() }</div></div>
+      </div>
+    </div>
+
+    <hr/>
+
+    <h3>Scenario comparisons (quick wins)</h3>
+    <div class="scenarios">
+      <div class="scenario"><strong>Income + $15k</strong><div style="margin-top:8px">${yearsBoost} years to 20% down at current save%.</div></div>
+      <div class="scenario"><strong>Save +5% of income</strong><div style="margin-top:8px">${yearsSaveBoost} years to 20% down at same salary.</div></div>
+    </div>
+
+    <hr/>
+
+    <h3>Action checklist (shorten timeline)</h3>
+    <ol style="margin:8px 0 0 18px;color:var(--muted)">
+      <li>Increase monthly savings by 5–10% (automate transfer to separate savings)</li>
+      <li>Target a home priced at or below the recommended max price above</li>
+      <li>Work to raise gross income (bonus, side income, upskill)</li>
+      <li>Consider 5–10% lower down if you can accept PMI short term — we can add PMI impact next</li>
+      <li>Check county assessor for local property tax (we used state effective average)</li>
+    </ol>
+
+    <small class="note">Notes: This tool uses state-level effective property tax rates as a baseline (ATTOM / Bankrate). County taxes and assessments can move the monthly tax number substantially. For a county-precise calculation we can add a small county lookup in the next iteration. :contentReference[oaicite:6]{index=6}</small>
+  `;
+
+  // extra small calc: PI for the exact price with 30yr @ rate
+  const loan = price * (1 - 0.20);
+  const r = annualRate/12;
+  const n = termYears*12;
+  const mortgagePI = loan * (r * Math.pow(1+r,n)) / (Math.pow(1+r,n) - 1);
+  document.getElementById('estPI').textContent = '$' + Math.round(mortgagePI).toLocaleString();
+});
+/* Initialize default state selection to a typical state (e.g., Texas) */
+stateSelect.value = "Texas";
+stateSelect.dispatchEvent(new Event('change'));
+</script>
+</body>
+</html>

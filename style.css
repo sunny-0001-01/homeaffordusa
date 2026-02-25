@@ -1,0 +1,152 @@
+<style>
+*{box-sizing:border-box}
+
+body{
+margin:0;
+font-family:system-ui,-apple-system,BlinkMacSystemFont;
+background:linear-gradient(180deg,#eef2ff,#ecfdf5);
+color:#0f172a;
+}
+
+header{
+padding:60px 20px;
+text-align:center;
+}
+
+header h1{
+margin:0;
+font-size:32px;
+}
+
+header p{
+color:#475569;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+padding:0 16px;
+}
+
+.hero{
+background:linear-gradient(135deg,#ffffff,#f0fdfa);
+border-radius:28px;
+padding:30px;
+box-shadow:0 30px 60px rgba(0,0,0,.08);
+display:flex;
+gap:20px;
+flex-wrap:wrap;
+align-items:center;
+}
+
+.cta{
+background:linear-gradient(90deg,#2563eb,#06b6d4);
+color:white;
+padding:14px 22px;
+border-radius:16px;
+font-weight:600;
+cursor:pointer;
+}
+
+.card{
+background:white;
+border-radius:24px;
+padding:22px;
+box-shadow:0 20px 40px rgba(0,0,0,.08);
+margin-top:22px;
+}
+
+label{
+display:block;
+margin-top:14px;
+font-weight:600;
+color:#334155;
+}
+
+input,select{
+width:100%;
+padding:14px;
+margin-top:6px;
+border-radius:14px;
+border:1px solid #e5e7eb;
+font-size:16px;
+}
+
+button{
+width:100%;
+margin-top:22px;
+padding:16px;
+border:none;
+border-radius:16px;
+background:linear-gradient(90deg,#2563eb,#06b6d4);
+color:white;
+font-size:16px;
+font-weight:600;
+cursor:pointer;
+}
+
+.verdict{
+font-size:24px;
+font-weight:800;
+}
+
+.progresswrap{
+height:10px;
+background:#e5e7eb;
+border-radius:8px;
+overflow:hidden;
+margin:8px 0;
+}
+
+.progress{
+height:100%;
+background:linear-gradient(90deg,#22c55e,#14b8a6);
+}
+
+.kpi{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+gap:12px;
+}
+
+.kpi .box{
+background:#f8fafc;
+padding:12px;
+border-radius:14px;
+}
+
+.scenarios{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+gap:12px;
+}
+
+.scenario{
+background:#f8fafc;
+padding:12px;
+border-radius:14px;
+}
+
+small,.small{
+color:#64748b;
+}
+
+hr{
+border:none;
+border-top:1px solid #e5e7eb;
+margin:18px 0;
+}
+
+footer{
+text-align:center;
+padding:40px 20px;
+color:#64748b;
+font-size:14px;
+}
+
+@media(max-width:640px){
+header h1{font-size:26px}
+.hero{padding:20px}
+.card{padding:18px}
+}
+</style>
